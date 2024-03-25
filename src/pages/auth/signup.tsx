@@ -28,7 +28,7 @@ export function SignUp() {
     formState: { isSubmitting },
   } = useForm<SignUpForm>()
 
-  const { mutateAsync: createRestaurant } = useMutation({
+  const { mutateAsync: registerRestaurantFn } = useMutation({
     mutationFn: registerRestaurant,
   })
 
@@ -37,7 +37,7 @@ export function SignUp() {
       if (data.email !== '') {
         console.log(data)
 
-        await createRestaurant({
+        await registerRestaurantFn({
           restaurantName: data.restaurantName,
           managerName: data.managerName,
           email: data.email,
