@@ -1,5 +1,7 @@
+import { useQuery } from '@tanstack/react-query'
 import { Helmet } from 'react-helmet-async'
 
+import { getOrders } from '@/api/get-orders'
 import { Pagination } from '@/components/pagination'
 import {
   Table,
@@ -13,6 +15,11 @@ import { OrderTableFilters } from './components/order-table-filters'
 import { OrderTableRow } from './components/order-table-row'
 
 export function Orders() {
+  const { data: result } = useQuery({
+    queryKey: ['orders'],
+    queryFn: getOrders,
+  })
+
   return (
     <>
       <Helmet title="Pedidos" />
@@ -27,7 +34,7 @@ export function Orders() {
                 <TableRow>
                   <TableHead className="w-[64px]"></TableHead>
                   <TableHead className="w-[140px]">Identificador</TableHead>
-                  <TableHead className="w-[180px]">Realizado há</TableHead>
+                  <TableHead className="w-[180px]">Realizado</TableHead>
                   <TableHead className="w-[140px]">Status</TableHead>
                   <TableHead>Cliente</TableHead>
                   <TableHead className="w-[140px]">Total do pedido</TableHead>
@@ -36,9 +43,10 @@ export function Orders() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {Array.from({ length: 10 }).map((_, i) => {
-                  return <OrderTableRow key={i} />
-                })}
+                {result &&
+                  result.orders.map((order) => {
+                    return <OrderTableRow key={order.orderId} order={order} />
+                  })}
               </TableBody>
             </Table>
           </div>
